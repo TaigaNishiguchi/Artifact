@@ -18,8 +18,8 @@
 </div>
 <div class='mt-4'>
     {% if request.user.id == object.author_id %}
-    <a href='{% url "bbs:update" article.pk %}'  class='btn btn-outline-primary mr-2'>編集</a>
-    <a href='{% url "bbs:delete" article.pk %}'  class='btn btn-danger ml-5'>削除</a>
+    <a href='{% url "bbs:update" article.pk %}'  class='btn btn-outline-primary mr-2 mb-3'>編集</a>
+    <a href='{% url "bbs:delete" article.pk %}'  class='btn btn-danger mb-3'>削除</a>
     {% endif %}
     <!-- コメントを表示 -->
     <div class="comment">

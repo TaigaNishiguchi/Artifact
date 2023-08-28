@@ -2,6 +2,7 @@
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.shortcuts import redirect, get_object_or_404
+from django.contrib import messages
 from django.http import HttpResponse
 from .models import Article, Comment
 from .forms import CommentForm
@@ -75,10 +76,19 @@ class UpdateView(LoginRequiredMixin, generic.edit.UpdateView):
  
         return super(UpdateView, self).dispatch(request, *args, **kwargs)
 
+    def form_valid(self, form):
+        self.object = comment = form.save()
+        messages.success(self.request, 'コメントを更新しました')
+        return redirect(self.get_success_url())
+
 #削除
 class DeleteView(LoginRequiredMixin, generic.edit.DeleteView):
     model = Article
     success_url = reverse_lazy('bbs:index')
+
+    def form_valid(self, form):
+        messages.success(self.request, 'コメントを削除しました')
+        return super().form_valid(form)
 
 #返信
 class CommentView(LoginRequiredMixin, generic.edit.CreateView):
