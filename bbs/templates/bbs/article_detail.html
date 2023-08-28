@@ -1,0 +1,55 @@
+{% extends './base.html' %}
+
+{% load markdown_extras %}
+ 
+{% block content %}
+ 
+<div>
+    <nav class='navbar navbar-expand-sm navbar-dark bg-dark fixed-top'>
+    <a class='navbar-brand' href='{% url "bbs:index" %}'>掲示板 TOP</a>
+</div>
+<div>
+    <p>タイトル：{{ article.title }}</p>
+    <p><h5>投稿内容：</h5><p><br>
+    {{ article.content|markdown|safe }}
+    <p><br>{{ article.author }}</p>
+    <p>{{ article.created_at|date:"Y-m-j H:i:s" }}<br>
+    {{ article.updated_at|date:"Y-m-j H:i:s" }}</p>
+</div>
+<div class='mt-4'>
+    {% if request.user.id == object.author_id %}
+    <a href='{% url "bbs:update" article.pk %}'  class='btn btn-outline-primary mr-2'>編集</a>
+    <a href='{% url "bbs:delete" article.pk %}'  class='btn btn-danger ml-5'>削除</a>
+    {% endif %}
+    <!-- コメントを表示 -->
+    <div class="comment">
+    <p>
+        <h5>
+            返信一覧
+        </h5>
+    </p>
+    {% for comment in article.comment_set.all %}
+    <div class="comment-content">
+        <p>{{ comment.author }}：{{ comment.created_at }}</p>
+        <p>{{ comment.content|markdown|safe }}</p>
+        <br>
+    </div>
+    {% endfor %}
+    </div>
+    <!-- コメント作成フォームを表示 -->
+    <div class="comment-form">
+      <h4>返信</h4>
+      <form action='{% url "bbs:comment" article.pk %}' method="post">
+        {% csrf_token %}
+        {{ comment_form}}
+        <div>
+          <button type="submit">送信</button>
+        </div>
+      </form>
+    </div>
+    <br>
+        <a href='{% url "bbs:index" %}' class='btn btn-outline-primary'>一覧に戻る</a>
+    {% if request.user.id == object.author_id %}
+    {% endif %}
+</div>
+{% endblock %}
