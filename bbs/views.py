@@ -58,7 +58,7 @@ class DetailView(generic.DetailView):
 class CreateView(LoginRequiredMixin, generic.edit.CreateView):
     model = Article
     fields = ['content', 'title', ]
- 
+
     def form_valid(self, form):
         form.instance.author = self.request.user
         return super(CreateView, self).form_valid(form)
@@ -76,6 +76,7 @@ class UpdateView(LoginRequiredMixin, generic.edit.UpdateView):
  
         return super(UpdateView, self).dispatch(request, *args, **kwargs)
 
+    #フラッシュメッセージ
     def form_valid(self, form):
         self.object = comment = form.save()
         messages.success(self.request, 'コメントを更新しました')
@@ -86,6 +87,7 @@ class DeleteView(LoginRequiredMixin, generic.edit.DeleteView):
     model = Article
     success_url = reverse_lazy('bbs:index')
 
+    #フラッシュメッセージ
     def form_valid(self, form):
         messages.success(self.request, 'コメントを削除しました')
         return super().form_valid(form)
